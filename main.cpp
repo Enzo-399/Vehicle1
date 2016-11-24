@@ -7,73 +7,74 @@ using namespace std;
 
 typedef int ElemType;
 
-const ElemType parkSize = 2;          //åœè½¦åœºåœè½¦çš„å®¹é‡
-const int vehicleNumber = 10;         //è½¦ç‰Œå·å­—ç¬¦æ•°é‡
-const double priceHour = 10;          //æ¯å°æ—¶åœè½¦çš„æ”¶è´¹ä»·æ ¼
+const ElemType parkSize = 2;          //Í£³µ³¡Í£³µµÄÈİÁ¿
+const int vehicleNumber = 10;         //³µÅÆºÅ×Ö·ûÊıÁ¿
+const double priceHour = 10;          //Ã¿Ğ¡Ê±Í£³µµÄÊÕ·Ñ¼Û¸ñ
 
-struct Vehicle{                       //è½¦è¾†çš„ç»“æ„ä½“
-    char vhlNumber[vehicleNumber];    //è½¦ç‰Œå·æ•°ç»„
-    time_t arrivalTime;               //æ±½è½¦åˆ°è¾¾çš„æ—¶é—´
-    time_t departTime;                //æ±½è½¦ç¦»å¼€çš„æ—¶é—´
+struct Vehicle{                       //³µÁ¾µÄ½á¹¹Ìå
+    char vhlNumber[vehicleNumber];    //³µÅÆºÅÊı×é
+    time_t arrivalTime;               //Æû³µµ½´ïµÄÊ±¼ä
+    time_t departTime;                //Æû³µÀë¿ªµÄÊ±¼ä
 };
 
 struct ParkStack{
-    //åœè½¦åœºç±»å‹
-    Vehicle parkVehicle[parkSize];
+    //Í£³µ³¡ÀàĞÍ
+    Vehicle parkVehicle[parkSize];    //Í£³µÎ»Êı×é
     ElemType top;
 };
 
 struct TempStack{
-    //ä¸´æ—¶æ ˆ
+    //ÁÙÊ±Õ»
     Vehicle tempVehicle[parkSize];
     ElemType top;
 };
 
 struct WaitNode{
-    //ç­‰å¾…é˜Ÿåˆ—èŠ‚ç‚¹ç±»å‹
+    //µÈ´ı¶ÓÁĞ½ÚµãÀàĞÍ
     Vehicle waitVehicle;
     WaitNode *next;
 };
 
 struct WaitQueue{
-    //ç­‰å¾…é˜Ÿåˆ—ç±»å‹
+    //µÈ´ı¶ÓÁĞÀàĞÍ
     WaitNode *front;
     WaitNode *rear;
 };
 
 void InitPackStack(ParkStack &parkStack){
-    //åˆå§‹åŒ–åœè½¦åœº
+    //³õÊ¼»¯Í£³µ³¡
     parkStack.top = -1;
 }
 
 void InitTempStack(TempStack &tempStack){
-    //åˆå§‹åŒ–ä¸´æ—¶æ ˆ
+    //³õÊ¼»¯ÁÙÊ±Õ»
     tempStack.top = -1;
 }
 
 void InitWaitQueue(WaitQueue &waitQueue){
-    //åˆå§‹åŒ–é˜Ÿåˆ—
+    //³õÊ¼»¯µÈ´ı¶ÓÁĞ
     waitQueue.front = (WaitNode *) malloc(sizeof(WaitNode));
     waitQueue.front->next = NULL;
     waitQueue.rear = waitQueue.front;
 }
 
-ElemType PushPark(ParkStack &parkStack,Vehicle &vehicle){//è½¦è¾†è¿›å…¥åœè½¦åœº
+ElemType PushPark(ParkStack &parkStack,Vehicle &vehicle){
+//³µÁ¾½øÈëÍ£³µ³¡
     if (parkStack.top == parkSize - 1) {
-        //è‹¥åœè½¦åœºæ»¡ï¼Œè¿”å›0
+        //ÈôÍ£³µ³¡Âú£¬·µ»Ø0
         return 0;
     } else {
         parkStack.top++;
         parkStack.parkVehicle[parkStack.top] = vehicle;
         time_t t;
 
-        vehicle.arrivalTime = time(&t);       //è®°å½•ä¸‹è¿›å…¥åœè½¦åœºçš„æ—¶é—´
+        vehicle.arrivalTime = time(&t);       //¼ÇÂ¼ÏÂ½øÈëÍ£³µ³¡µÄÊ±¼ä
     }
-    return parkStack.top + 1;                 //è¿”å›è½¦è¾†æ‰€åœ¨çš„è½¦ä½
+    return parkStack.top + 1;                 //·µ»Ø³µÁ¾ËùÔÚµÄ³µÎ»
 }
 
 ElemType IsParkStackEmpty(ParkStack &parkStack){
-    //åˆ¤æ–­åœè½¦åœºæ˜¯å¦ä¸ºç©º
+    //ÅĞ¶ÏÍ£³µ³¡ÊÇ·ñÎª¿Õ
     if (parkStack.top == -1) {
         return 1;
     } else {
@@ -82,7 +83,7 @@ ElemType IsParkStackEmpty(ParkStack &parkStack){
 }
 
 ElemType IsQueueEmpty(WaitQueue &waitQueue){
-    //åˆ¤æ–­ç­‰å¾…çš„é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
+    //ÅĞ¶ÏµÈ´ıµÄ¶ÓÁĞÊÇ·ñÎª¿Õ
     if (waitQueue.front == waitQueue.rear) {
         return 1;
     } else {
@@ -91,73 +92,73 @@ ElemType IsQueueEmpty(WaitQueue &waitQueue){
 }
 
 void EnQueue(Vehicle &vehicle, WaitQueue &waitQueue){
-    //è½¦è¾†åœ¨ä¾¿é“ä¸Šæ’é˜Ÿ
+    //³µÁ¾ÔÚ±ãµÀÉÏÅÅ¶Ó
     WaitNode *temp;
     temp = (WaitNode *) malloc(sizeof(WaitNode));
     temp->next = NULL;
     if (vehicle.vhlNumber) {
-        strcpy(temp->waitVehicle.vhlNumber, vehicle.vhlNumber);
+        strcpy(temp->waitVehicle.vhlNumber, vehicle.vhlNumber);         //³µÁ¾µÄ³µÅÆºÅ¸³Öµ¸øµÈ´ı³µÁ¾µÄ³µÅÆºÅ
         waitQueue.rear->next = temp;
         waitQueue.rear = temp;
     }
 }
 
 void Arrival(ParkStack &parkStack,Vehicle &vehicle,WaitQueue &waitQueue){
-    //è½¦è¾†åˆ°è¾¾
-    cout << "è¯·è¾“å…¥åˆ°è¾¾æ±½è½¦çš„è½¦ç‰Œå·ï¼š";
+    //³µÁ¾µ½´ï
+    cout << "ÇëÊäÈëµ½´ïÆû³µµÄ³µÅÆºÅ£º";
     cin >> vehicle.vhlNumber;
     ElemType i = PushPark(parkStack, vehicle);
     if (i) {
-        //è½¦è¾†å·²ç»æˆåŠŸè¿›å…¥åœè½¦åœºï¼Œåˆ™è¾“å‡ºç›¸å…³ä¿¡æ¯
-        cout << "è½¦è¾†å·²è¿›å…¥åœè½¦åœºï¼Œä½äºç¬¬â€œ" << i << "ä¸ªè½¦ä½" << endl;
-        cout << "è½¦è¾†è¿›å…¥åœè½¦åœºçš„æ—¶é—´æ˜¯ï¼š" << ctime(&(vehicle.arrivalTime));
+        //³µÁ¾ÒÑ¾­³É¹¦½øÈëÍ£³µ³¡£¬ÔòÊä³öÏà¹ØĞÅÏ¢
+        cout << "³µÁ¾ÒÑ½øÈëÍ£³µ³¡£¬Î»ÓÚµÚ¡°" << i << "¡±¸ö³µÎ»" << endl;
+        cout << "³µÁ¾½øÈëÍ£³µ³¡µÄÊ±¼äÊÇ£º" << ctime(&(vehicle.arrivalTime));
     } else {
-        //åœè½¦åœºå·²æ»¡ï¼Œé€šçŸ¥å®¢æˆ·å»ä¾¿é“æ’é˜Ÿ
-        cout << "åœè½¦åœºå†…å·²æ— ç©ºä½ï¼Œè¯·å»ä¾¿é“æ’é˜Ÿï¼" << endl;
-        EnQueue(vehicle, waitQueue);    //è¿›é˜Ÿ
-        cout << "æ‚¨çš„è½¦å·²æˆåŠŸåœ¨ä¾¿é“ç­‰å€™ï¼" << endl;//å¹¶å‘ŠçŸ¥ç®¡ç†äººå‘˜ï¼Œå®¢æˆ·å·²æˆåŠŸæ’é˜Ÿ
+        //Í£³µ³¡ÒÑÂú£¬Í¨Öª¿Í»§È¥±ãµÀÅÅ¶Ó
+        cout << "Í£³µ³¡ÄÚÒÑÎŞ¿ÕÎ»£¬ÇëÈ¥±ãµÀÅÅ¶Ó£¡" << endl;
+        EnQueue(vehicle, waitQueue);    //½ø¶Ó
+        cout << "ÄúµÄ³µÒÑ³É¹¦ÔÚ±ãµÀµÈºò£¡" << endl;//²¢¸æÖª¹ÜÀíÈËÔ±£¬¿Í»§ÒÑ³É¹¦ÅÅ¶Ó
     }
 }
 
 ElemType LeavePark(ElemType &location,ParkStack &parkStack,WaitQueue &waitQueue){
-    //è½¦è¾†ç¦»å¼€åœè½¦åœº
+    //³µÁ¾Àë¿ªÍ£³µ³¡
     TempStack tempStack;
-    InitTempStack(tempStack);           //å»ºç«‹ä¸´æ—¶æ ˆï¼Œå¹¶åˆå§‹åŒ–
+    InitTempStack(tempStack);           //½¨Á¢ÁÙÊ±Õ»£¬²¢³õÊ¼»¯
 
     if (parkStack.top == -1) {
-        //è‹¥åœè½¦åœºç©ºï¼Œåˆ™è¿”å›
-        cout << "æ­¤æ—¶åœè½¦åœºå†…æ— è½¦è¾†ï¼" << endl;
+        //ÈôÍ£³µ³¡¿Õ£¬Ôò·µ»Ø
+        cout << "´ËÊ±Í£³µ³¡ÄÚÎŞ³µÁ¾£¡" << endl;
         return 0;
     } else if (parkStack.top + 1 == location) {
-        //è‹¥ç¦»å¼€çš„è½¦è¾†ä½äºæ ˆé¡¶
-        cout << "è½¦ç‰Œå·ä¸ºï¼š" << parkStack.parkVehicle[parkStack.top].vhlNumber << "çš„è½¦è¾†å·²ç»ç¦»å¼€åœè½¦åœº" << endl;
+        //ÈôÀë¿ªµÄ³µÁ¾Î»ÓÚÕ»¶¥
+        cout << "³µÅÆºÅÎª£º" << parkStack.parkVehicle[parkStack.top].vhlNumber << "µÄ³µÁ¾ÒÑ¾­Àë¿ªÍ£³µ³¡" << endl;
         time_t t;
 
         parkStack.parkVehicle[parkStack.top].departTime = time(&t);
-        cout << "ç¦»å¼€æ—¶é—´æ˜¯ï¼š" << ctime(&(parkStack.parkVehicle[parkStack.top].departTime));
+        cout << "Àë¿ªÊ±¼äÊÇ£º" << ctime(&(parkStack.parkVehicle[parkStack.top].departTime));
         double timediff = difftime(parkStack.parkVehicle[parkStack.top].departTime,
                                    parkStack.parkVehicle[parkStack.top].arrivalTime) / 3600;
         double money = timediff * priceHour;
 
-        cout << "éœ€èŠ±è´¹ï¼š" << money << "å…ƒ" << endl;
+        cout << "Ğè»¨·Ñ£º" << money << "Ôª" << endl;
         parkStack.top--;
-    } else {
+    } else {    //Àë¿ª³µÁ¾²»´¦ÓÚÕ»¶¥
         while (1) {
-            tempStack.tempVehicle[++tempStack.top] = parkStack.parkVehicle[parkStack.top--];              //ä¸ä¸´æ—¶æ ˆæ“ä½œ
+            tempStack.tempVehicle[++tempStack.top] = parkStack.parkVehicle[parkStack.top--];              //ÓëÁÙÊ±Õ»²Ù×÷
             if (parkStack.top == location - 1) {
                 break;
             }
         }
-        cout << "è½¦ç‰Œå·ä¸ºï¼š" << parkStack.parkVehicle[parkStack.top].vhlNumber << "çš„è½¦è¾†å·²ç»ç¦»å¼€åœè½¦åœº" << endl;
+        cout << "³µÅÆºÅÎª£º" << parkStack.parkVehicle[parkStack.top].vhlNumber << "µÄ³µÁ¾ÒÑ¾­Àë¿ªÍ£³µ³¡" << endl;
         time_t t;
 
         parkStack.parkVehicle[parkStack.top].departTime = time(&t);
-        cout << "ç¦»å¼€æ—¶é—´ä¸ºï¼š" << ctime(&(parkStack.parkVehicle[parkStack.top].departTime));
+        cout << "Àë¿ªÊ±¼äÎª£º" << ctime(&(parkStack.parkVehicle[parkStack.top].departTime));
         double timediff = difftime(parkStack.parkVehicle[parkStack.top].departTime,
                                    parkStack.parkVehicle[parkStack.top].arrivalTime) / 3600;
         double money = timediff * priceHour;
         cout.precision(2);
-        cout << "éœ€äº¤è´¹ï¼š" << money << "å…ƒ" << endl;
+        cout << "Ğè½»·Ñ£º" << money << "Ôª" << endl;
 
         while (tempStack.top != -1) {
             parkStack.parkVehicle[parkStack.top++] = tempStack.tempVehicle[tempStack.top--];
@@ -168,9 +169,9 @@ ElemType LeavePark(ElemType &location,ParkStack &parkStack,WaitQueue &waitQueue)
 }
 
 void DeleteQueue(ParkStack &parkStack, WaitQueue &waitQueue) {
-    //è½¦è¾†ä»ä¾¿é“è¿›å…¥åœè½¦åœº
+    //³µÁ¾´Ó±ãµÀ½øÈëÍ£³µ³¡
     if (waitQueue.front->next->next == NULL) {
-        //è‹¥é˜Ÿä¸­åªæœ‰ä¸€è¾†è½¦
+        //Èô¶ÓÖĞÖ»ÓĞÒ»Á¾³µ
         parkStack.parkVehicle[++parkStack.top] = waitQueue.front->next->waitVehicle;
         free(waitQueue.front->next);
         waitQueue.front->next = NULL;
@@ -186,29 +187,29 @@ void DeleteQueue(ParkStack &parkStack, WaitQueue &waitQueue) {
 }
 
 void DepartPark(ParkStack &parkStack,WaitQueue &waitQueue) {
-    //è½¦è¾†ç¦»å¼€åœè½¦åœº
+    //³µÁ¾Àë¿ªÍ£³µ³¡
     ElemType location;
-    cout << "åœè½¦åœºä¸­å…±æœ‰" << parkStack.top + 1 << "è¾†è½¦" << endl;
+    cout << "Í£³µ³¡ÖĞ¹²ÓĞ" << parkStack.top + 1 << "Á¾³µ" << endl;
     if (IsParkStackEmpty(parkStack)) {
-        cout << "æ­¤æ—¶åœè½¦åœºä¸­æ— è½¦è¾†å­˜æ”¾" << endl;
+        cout << "´ËÊ±Í£³µ³¡ÖĞÎŞ³µÁ¾´æ·Å" << endl;
     } else {
-        cout << "è¯·è¾“å…¥å°†è¦ç¦»å¼€åœè½¦åœºçš„è½¦è¾†æ‰€åœ¨çš„è½¦ä½ï¼š";
+        cout << "ÇëÊäÈë½«ÒªÀë¿ªÍ£³µ³¡µÄ³µÁ¾ËùÔÚµÄ³µÎ»£º";
         cin >> location;
         if (location < 0 || location > parkStack.top + 1) {
-            cout << "æ‚¨è¾“å…¥çš„è½¦ä½é”™è¯¯ï¼Œè¯·é‡æ–°é€‰æ‹©ï¼" << endl;
+            cout << "ÄúÊäÈëµÄ³µÎ»´íÎó£¬ÇëÖØĞÂÑ¡Ôñ£¡" << endl;
             return;
         }
     }
-    ElemType j = LeavePark(location, parkStack, waitQueue); //è°ƒç”¨å‡ºæ ˆå‡½æ•°
+    ElemType j = LeavePark(location, parkStack, waitQueue); //µ÷ÓÃ³öÕ»º¯Êı
     if (j) {
         if (!IsQueueEmpty(waitQueue)) {
             DeleteQueue(parkStack, waitQueue);
             cout << endl;
 
-            cout << "è½¦ç‰Œå·ä¸ºï¼š" << parkStack.parkVehicle[parkStack.top].vhlNumber<<"çš„è½¦è¾†å·²è¿›å…¥åœè½¦åœº"<<endl;
+            cout << "³µÅÆºÅÎª£º" << parkStack.parkVehicle[parkStack.top].vhlNumber<<"µÄ³µÁ¾ÒÑ½øÈëÍ£³µ³¡"<<endl;
             cout << endl;
         } else {
-            cout << "æ­¤æ—¶ä¾¿é“ä¸Šæ— è½¦è¾†æ’é˜Ÿï¼" << endl;
+            cout << "´ËÊ±±ãµÀÉÏÎŞ³µÁ¾ÅÅ¶Ó£¡" << endl;
         }
     }
 }
@@ -221,9 +222,9 @@ int main() {
     InitWaitQueue(waitQueue);
     char choice;
     while (1) {
-    //é€‰æ‹©æ§åˆ¶ç•Œé¢
-        cout << "è¯·é€‰æ‹©ï¼šAï¼šè½¦è¾†åˆ°è¾¾ã€Dï¼šè½¦è¾†ç¦»å¼€ã€Eï¼šé€€å‡ºç¨‹åº" << endl;
-        cout << "è¯·é€‰æ‹©ï¼š" << endl;
+    //Ñ¡Ôñ¿ØÖÆ½çÃæ
+        cout << "ÇëÑ¡Ôñ£ºA£º³µÁ¾µ½´ï¡¢D£º³µÁ¾Àë¿ª¡¢E£ºÍË³ö³ÌĞò" << endl;
+        cout << "ÇëÑ¡Ôñ£º" << endl;
         cin >> choice;
         if (choice == 'E') {
             break;
@@ -236,7 +237,7 @@ int main() {
                 DepartPark(parkStack, waitQueue);
                 break;
             default:
-                cout << "è¾“å…¥è¶…å‡ºèŒƒå›´ï¼" << endl;
+                cout << "ÊäÈë³¬³ö·¶Î§£¡" << endl;
                 break;
         }
     }
